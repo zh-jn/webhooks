@@ -9,19 +9,20 @@ type customTime struct {
 	time.Time
 }
 
+var TimeLayouts = []string{
+	"2006-01-02 15:04:05 MST",
+	"2006-01-02 15:04:05 Z07:00",
+	"2006-01-02 15:04:05 Z0700",
+	time.RFC3339,
+}
+
 func (t *customTime) UnmarshalJSON(b []byte) (err error) {
-	layout := []string{
-		"2006-01-02 15:04:05 MST",
-		"2006-01-02 15:04:05 Z07:00",
-		"2006-01-02 15:04:05 Z0700",
-		time.RFC3339,
-	}
 	s := strings.Trim(string(b), "\"")
 	if s == "null" {
 		t.Time = time.Time{}
 		return
 	}
-	for _, l := range layout {
+	for _, l := range TimeLayouts {
 		t.Time, err = time.Parse(l, s)
 		if err == nil {
 			break
